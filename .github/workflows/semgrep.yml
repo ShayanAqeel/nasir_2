@@ -13,20 +13,11 @@ jobs:
     name: semgrep/ci
     runs-on: ubuntu-latest
 
-    container:
-      image: returntocorp/semgrep
-
-    if: (github.actor != 'dependabot[bot]')
-
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run Semgrep and generate SARIF file
-        run: semgrep ci --sarif ./sarif/results.sarif
-        env:
-          SEMGREP_RULES: p/default
-
-      - name: Upload SARIF file to code scanning alerts
-        uses: github/codeql-action/upload-sarif@v1
+      - name: Run Semgrep and upload SARIF file to code scanning alerts
+        uses: returntocorp/semgrep-action@v1
         with:
-          sarif_file: ./sarif/results.sarif
+          config: .semgrep.yml
+          output-file: results.sarif
